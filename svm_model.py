@@ -19,7 +19,8 @@ class SVM_Model():
 
 		###SLACK HYPERPARAMETER
 		self.C = 1.0
-		
+		self.class_labels = class_labels
+		self.projection = projection
 
 
 
@@ -29,8 +30,13 @@ class SVM_Model():
 		MAKE SURE TO ADD HYPERPARAMTER TO MODEL 
 
 		'''
-		
-		
+		n_samples, n_features = X.shape
+
+		# Gram matrix
+		kernel = np.zeros(n_samples, n_samples)
+		for i_sample in range(n_samples):
+			for j_sample in range(n_samples):
+
 		
 
 	def eval(self,x):
