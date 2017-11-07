@@ -130,11 +130,11 @@ class Projections():
 		y_one_hot = create_one_hot_label(Y, 3)
 		#perform mean subtraction
 		X_new, Y_new = subtract_mean_from_data(X, y_one_hot)
-
 		m = X_new.shape[1]
 		n = Y_new.shape[1]
-		XX = np.dot(X_new.T, X_new)
-		YY = np.dot(Y_new.T, Y_new)
+
+		XX = compute_covariance_matrix(X_new, X_new)
+		YY = compute_covariance_matrix(Y_new, Y_new)
 		#compute the trace of each matrix
 		XX += np.trace(XX)**reg**np.eye(m)
 		YY += np.trace(YY)**reg**np.eye(n)
@@ -147,8 +147,8 @@ class Projections():
 		U, sigma, V = svd(correlation_XY)
 
 		#first two columns only
-		U = U[:, :2]
-		return U.T, sigma
+		U = U[:, :3]
+		return U.T, XX_inverse
 
 
 
@@ -178,18 +178,18 @@ if __name__ == "__main__":
 	feat_dim = max(X[0].shape)
 	projections = Projections(feat_dim,CLASS_LABELS)
 
-
-	# rand_proj = projections.get_random_proj()
-	# # Show Random 2D Projection
-	# proj2D_viz = Project2D(rand_proj,CLASS_LABELS)
-	# proj2D_viz.project_data(X,Y, white = np.eye(feat_dim))
+	
+	rand_proj = projections.get_random_proj()
+	# Show Random 2D Projection
+	proj2D_viz = Project2D(rand_proj,CLASS_LABELS)
+	proj2D_viz.project_data(X,Y, white = np.eye(feat_dim))
 
 	#PCA Projection 
-	# pca_proj = projections.pca_projection(X,Y)
+	pca_proj = projections.pca_projection(X,Y)
 	
-	# #Show PCA 2D Projection
-	# proj2D_viz = Project2D(pca_proj,CLASS_LABELS)
-	# proj2D_viz.project_data(X,Y, white = np.eye(feat_dim))
+	#Show PCA 2D Projection
+	proj2D_viz = Project2D(pca_proj,CLASS_LABELS)
+	proj2D_viz.project_data(X,Y, white = np.eye(feat_dim))
 
 	#CCA Projection 
 	cca_proj,white_cov = projections.cca_projection(X,Y)
